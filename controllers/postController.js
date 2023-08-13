@@ -12,7 +12,7 @@ exports.createPost = async (req, res) => {
       location: { type: "Point", coordinates: [latitude, longitude] },
     });
     await post.save();
-    res.status(201).json({ message: "Post created successfully" });
+    res.status(201).json({ message: "Post created successfully", post });
   } catch (error) {
     res.status(500).json({ message: "An error occurred", error });
   }
@@ -20,9 +20,9 @@ exports.createPost = async (req, res) => {
 exports.updatePost = async (req, res) => {
   try {
     const { title, body, active, latitude, longitude } = req.body;
-    const { postId } = req.params;
+    const { id } = req.params;
     const updatedPost = await Post.findByIdAndUpdate(
-      postId,
+      id,
       {
         title,
         body,
@@ -31,21 +31,31 @@ exports.updatePost = async (req, res) => {
       },
       { new: true }
     );
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
     res.status(200).json(updatedPost);
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred", error });
+  }
+};
+exports.getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ message: "An error occurred", error });
   }
 };
 exports.deletePost = async (req, res) => {
   try {
-    const { postId } = req.params;
-    await Post.findByIdAndDelete(postId);
+    const { id } = req.params;
+    await Post.findByIdAndDelete(id);
     res.status(204).json({ message: "Post deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "An error occurred", error });
   }
 };
-
 exports.getPostsByLocation = async (req, res) => {
   try {
     const { latitude, longitude } = req.params;

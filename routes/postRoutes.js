@@ -9,24 +9,25 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   postController.createPost
 );
-
 router.put(
-  "/:postId",
+  "/:id",
   passport.authenticate("jwt", { session: false }),
   postController.updatePost
 );
-
+router.get(
+  "/getAllPosts",
+  passport.authenticate("jwt", { session: false }),
+  postController.getAllPosts
+);
 router.delete(
-  "/:postId",
+  "/:id",
   passport.authenticate("jwt", { session: false }),
   postController.deletePost
 );
-
 router.get(
   "/byLocation/:latitude/:longitude",
   postController.getPostsByLocation
 );
-
 router.get(
   "/dashboardCounts",
   passport.authenticate("jwt", { session: false }),

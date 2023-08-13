@@ -6,9 +6,10 @@ const postSchema = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   active: Boolean,
   location: {
-    type: { type: String },
+    type: { type: String, default: "Point" },
     coordinates: [Number],
   },
+  timestamp: { type: Date, default: Date.now },
 });
 
 postSchema.index({ location: "2dsphere" });
